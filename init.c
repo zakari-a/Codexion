@@ -54,7 +54,6 @@ int init_simulation(t_sim *sim, char **args)
         sim->coders[i].id = i + 1;
         sim->coders[i].compile_count = 0;
         sim->coders[i].sim = sim;
-        sim->coders[i].last_compile_start = get_current_time();
         sim->coders[i].finished = 0;
         pthread_mutex_init(&sim->coders[i].c_mutex, NULL);
         i++;

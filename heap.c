@@ -3,7 +3,7 @@
 int    is_more_urgent(t_sim *sim, t_coder *a, t_coder *b)
 {
     if (sim->scheduler == 0)
-        return fifo_check(sim, a, b);
+        return fifo_check(a, b);
 
     else
         return edf_check(sim, a, b);

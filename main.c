@@ -11,13 +11,12 @@ int main(int ac, char **av)
         return (1);
     }
 
-    if (init_simulation(&sim, av, ac))
+    if (init_simulation(&sim, av))
         return (1);
 
     i = 0;
     while (i < sim.num_coders)
     {
-        sim.coders[i].last_compile_start = sim.start_time;        
         if (pthread_create(&sim.coders[i].thread, NULL,
                            routine, &sim.coders[i]) != 0)
         {
@@ -29,7 +28,6 @@ int main(int ac, char **av)
 
     monitor_simulation(&sim);
 
-    i = 0;
     i = 0;
     while (i < sim.num_coders)
     {
