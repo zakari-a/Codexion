@@ -25,6 +25,12 @@ int main(int ac, char **av)
         }
         i++;
     }
+    pthread_mutex_lock(&sim.start_mutex);
+    sim.start = 1;
+    pthread_cond_broadcast(&sim.start_cond);
+    while (sim.ready_count < sim.num_coders)
+        pthread_cond_wait(&sim.start_cond, &sim.start_mutex);
+    pthread_mutex_unlock(&sim.start_mutex);
 
     monitor_simulation(&sim);
 

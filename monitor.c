@@ -3,7 +3,7 @@
 void monitor_simulation(t_sim *sim)
 {
     int finished_count;
-    long current_time;
+    long    current_time;
     int i;
 
     finished_count = 0;
@@ -24,6 +24,7 @@ void monitor_simulation(t_sim *sim)
                 pthread_mutex_lock(&sim->print_mutex);
                 printf("%ld %d burned out\n", current_time, sim->coders[i].id);
                 pthread_mutex_unlock(&sim->stop_mutex);
+                pthread_cond_broadcast(&sim->condition);
                 return ;
             }
             pthread_mutex_unlock(&sim->stop_mutex);
@@ -34,6 +35,7 @@ void monitor_simulation(t_sim *sim)
             pthread_mutex_lock(&sim->stop_mutex);
             sim->stop = 1;
             pthread_mutex_unlock(&sim->stop_mutex);
+            pthread_cond_broadcast(&sim->condition);
             return ;
         }
         usleep(500);

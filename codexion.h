@@ -13,6 +13,7 @@
 typedef struct s_dongle
 {
     pthread_mutex_t mutex;
+    pthread_cond_t  cond;
     long last_release;
 } t_dongle;
 
@@ -30,6 +31,8 @@ typedef struct s_coder
 
 typedef struct s_sim
 {
+    int start;
+    int ready_count;
     long    start_time;
     int stop;
     int num_coders;
@@ -45,6 +48,8 @@ typedef struct s_sim
     pthread_mutex_t stop_mutex;
     pthread_mutex_t print_mutex;
     pthread_mutex_t queue_mutex;
+    pthread_mutex_t start_mutex;
+    pthread_cond_t  start_cond;
     pthread_cond_t  condition;
     
     t_coder *coders;

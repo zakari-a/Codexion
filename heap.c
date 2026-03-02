@@ -13,8 +13,6 @@ void    heap_push(t_sim *sim, t_coder *new_coder)
 {
     int index;
 
-    pthread_mutex_lock(&sim->queue_mutex);
-
     sim->heap[sim->heap_size] = new_coder;
     index = sim->heap_size;
     
@@ -29,16 +27,12 @@ void    heap_push(t_sim *sim, t_coder *new_coder)
         break;
     }
     sim->heap_size++;
-    pthread_cond_broadcast(&sim->condition);
-    pthread_mutex_unlock(&sim->queue_mutex);
-
 }
 
 void    heap_pop(t_sim *sim)
 {
     int i;
 
-    pthread_mutex_lock(&sim->queue_mutex);
     if (sim->heap_size == 0)
     {
         pthread_mutex_unlock(&sim->queue_mutex);
@@ -66,5 +60,4 @@ void    heap_pop(t_sim *sim)
         else
             break ;
     }
-    pthread_mutex_unlock(&sim->queue_mutex);
 }
