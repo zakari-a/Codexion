@@ -10,6 +10,9 @@
 #include <limits.h>
 
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 typedef struct s_dongle
 {
     pthread_mutex_t mutex;
@@ -79,6 +82,13 @@ int	parse(char **args, int size);
 
 //----routine----//
 void    *routine(void *arg);
+
+//----routine_helpers----//
+struct timespec get_wakeup_time(long remaining);
+long    dongle_cooldown(t_sim *sim, long last_release);
+void    release_dongles(t_sim *sim, int left, int right);
+int  acquire_dongle(t_sim *sim, int idx);
+void    leave_queue(t_sim *sim, int flag, int dongle_id);
 
 //----monitor----//
 void    monitor_simulation(t_sim *sim);

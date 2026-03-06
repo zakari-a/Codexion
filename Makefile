@@ -1,18 +1,18 @@
 NAME = codexion
 
 SRCS = cleanup.c heap.c main.c monitor.c\
-	   routine.c init.c parser.c utils.c
+	   routine.c init.c parser.c utils.c routine_helpers.c\
 
 OBJS = $(SRCS:.c=.o)
 
-CC = cc
+CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -pthread
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CC) -fsanitize=thread -g -O1 $(CFLAGS) $(OBJS) -o $(NAME)
 
 clean :
 	rm -f $(OBJS) $(OBJSB)

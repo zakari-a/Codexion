@@ -15,7 +15,7 @@
 int	is_positive(char *str)
 {
 	int i;
-	if (!str[0] || atoi(str) == 0)
+	if (!str[0])
 		return (1);
 	i = 0;
 	while (str[i])
