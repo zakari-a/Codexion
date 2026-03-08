@@ -6,7 +6,7 @@
 /*   By: zael-has <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 00:10:20 by zael-has          #+#    #+#             */
-/*   Updated: 2026/03/08 02:00:06 by zael-has         ###   ########.fr       */
+/*   Updated: 2026/03/08 02:20:22 by zael-has         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	set_starttime(t_sim *sim)
 	pthread_cond_broadcast(&sim->start_cond);
 	pthread_mutex_unlock(&sim->start_mutex);
 }
-	
+
 void	set_compiletime(t_sim *sim)
 {
 	int	i;
@@ -76,6 +76,7 @@ int	main(int ac, char **av)
 		return (1);
 	if (init_coders(&sim))
 		return (1);
+	set_starttime(&sim);
 	set_compiletime(&sim);
 	monitor_simulation(&sim);
 	join_coders(&sim);

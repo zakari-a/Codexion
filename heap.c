@@ -6,7 +6,7 @@
 /*   By: zael-has <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 23:34:59 by zael-has          #+#    #+#             */
-/*   Updated: 2026/03/07 23:46:06 by zael-has         ###   ########.fr       */
+/*   Updated: 2026/03/08 03:13:17 by zael-has         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,7 @@ void	heap_push(t_sim *sim, t_coder *new_coder)
 
 void	heap_pop(t_sim *sim)
 {
-	int	i;
-	int	left;
-	int	right;
-	int	target;
-
+	int (i), (left), (right), (target);
 	if (sim->heap_size == 0)
 	{
 		pthread_mutex_unlock(&sim->queue_mutex);

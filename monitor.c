@@ -6,7 +6,7 @@
 /*   By: zael-has <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 00:59:56 by zael-has          #+#    #+#             */
-/*   Updated: 2026/03/08 02:04:49 by zael-has         ###   ########.fr       */
+/*   Updated: 2026/03/08 03:40:35 by zael-has         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,48 @@ void	endof_sim(t_sim *sim)
 	pthread_mutex_unlock(&sim->queue_mutex);
 }
 
+int	check_coders(t_sim *sim, int *finished_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->num_coders)
+	{
+		pthread_mutex_lock(&sim->coders[i].c_mutex);
+		if (sim->coders[i].finished)
+			(*finished_count)++;
+		else if (get_current_time() - sim->coders[i].last_compile_start
+			> sim->time_to_burnout)
+		{
+			burn_out(sim, i);
+			return (1);
+		}
+		pthread_mutex_unlock(&sim->coders[i].c_mutex);
+		i++;
+	}
+	return (0);
+}
+
+int	stop_check(t_sim *sim)
+{
+	pthread_mutex_lock(&sim->stop_mutex);
+	if (sim->stop)
+	{
+		pthread_mutex_unlock(&sim->stop_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&sim->stop_mutex);
+	return (0);
+}
+
 void	monitor_simulation(t_sim *sim)
 {
-	int		finished_count;
-	int		i;
+	int	finished_count;
 
 	while (1)
 	{
-		pthread_mutex_lock(&sim->stop_mutex);
-		if (sim->stop)
-		{
-			pthread_mutex_unlock(&sim->stop_mutex);
+		if (stop_check(sim))
 			return ;
-		}
-		pthread_mutex_unlock(&sim->stop_mutex);
 		pthread_mutex_lock(&sim->start_mutex);
 		if (!sim->start)
 		{
@@ -62,21 +90,8 @@ void	monitor_simulation(t_sim *sim)
 		}
 		pthread_mutex_unlock(&sim->start_mutex);
 		finished_count = 0;
-		i = 0;
-		while (i < sim->num_coders)
-		{
-			pthread_mutex_lock(&sim->coders[i].c_mutex);
-			if (sim->coders[i].finished)
-				finished_count++;
-			else if (get_current_time() - sim->coders[i].last_compile_start
-				> sim->time_to_burnout)
-			{
-				burn_out(sim, i);
-				return ;
-			}
-			pthread_mutex_unlock(&sim->coders[i].c_mutex);
-			i++;
-		}
+		if (check_coders(sim, &finished_count))
+			return ;
 		if (finished_count == sim->num_coders)
 		{
 			endof_sim(sim);
