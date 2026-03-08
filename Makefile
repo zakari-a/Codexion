@@ -1,6 +1,6 @@
 NAME = codexion
 
-SRCS = cleanup.c heap.c main.c monitor.c\
+SRCS = cleanup.c heap.c main.c monitor.c coder_work.c\
 	   routine.c init.c parser.c utils.c routine_helpers.c\
 
 OBJS = $(SRCS:.c=.o)
